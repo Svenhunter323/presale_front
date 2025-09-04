@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useAccount } from 'wagmi'
 import { parseUnits } from 'viem'
-import { formatTokenAmount, formatBNB, formatUSDT, parseTokenInput, getMaxPurchaseForStage } from '../lib/format.js'
+import { formatTokenAmount, formatTokenAmountForInput, formatUSDT, parseTokenInput, getMaxPurchaseForStage } from '../lib/format.js'
 import { useBuyNative } from '../hooks/useBuyNative.js'
 import { useBuyUSDT } from '../hooks/useBuyUSDT.js'
 import { useToast } from './Toasts.jsx'
@@ -57,7 +57,7 @@ export const BuyPanel = ({
     
     try {
       const payAmountBigInt = parseTokenInput(payAmount, activeTab === 'bnb' ? 18 : usdtDecimals)
-      
+
       if (payAmountBigInt === 0n) {
         setReceiveAmount('')
         return
@@ -66,14 +66,13 @@ export const BuyPanel = ({
       let waveAmount = 0n
       
       if (activeTab === 'bnb') {
-        // Calculate WAVE from BNB: payAmount / priceNativeWeiPerWave
-        waveAmount = payAmountBigInt / currentStage.priceNativeWeiPerWave
+        // Calculate WAVE from BNB: payAmount / priceNative (e.g., 0.5 BNB / 0.0015 BNB per WAVE = 333.33 WAVE)
+        waveAmount = (payAmountBigInt * parseUnits('1', 18)) / currentStage.priceNativeWeiPerWave
       } else {
-        // Calculate WAVE from USDT: payAmount / priceUsdtUnitsPerWave
-        waveAmount = payAmountBigInt / currentStage.priceUsdtUnitsPerWave
+        // Calculate WAVE from USDT: payAmount / priceUsdt (e.g., 500 USDT / 1.5 USDT per WAVE = 333.33 WAVE)
+        waveAmount = (payAmountBigInt * parseUnits('1', 18)) / currentStage.priceUsdtUnitsPerWave
       }
-      
-      setReceiveAmount(formatTokenAmount(waveAmount, 18, 4))
+      setReceiveAmount(formatTokenAmountForInput(waveAmount, 18, 4))
     } catch (err) {
       console.error('Error calculating receive amount:', err)
       setReceiveAmount('')
@@ -102,11 +101,13 @@ export const BuyPanel = ({
       let payAmountBigInt = 0n
       
       if (activeTab === 'bnb') {
-        payAmountBigInt = waveAmount * currentStage.priceNativeWeiPerWave
-        setPayAmount(formatBNB(payAmountBigInt, 6))
+        // Calculate BNB needed: waveAmount * priceNative (e.g., 333.33 WAVE * 0.0015 BNB per WAVE = 0.5 BNB)
+        payAmountBigInt = (waveAmount * currentStage.priceNativeWeiPerWave) / parseUnits('1', 18)
+        setPayAmount(formatTokenAmountForInput(payAmountBigInt, 18, 6))
       } else {
-        payAmountBigInt = waveAmount * currentStage.priceUsdtUnitsPerWave
-        setPayAmount(formatUSDT(payAmountBigInt, usdtDecimals, 4))
+        // Calculate USDT needed: waveAmount * priceUsdt (e.g., 333.33 WAVE * 1.5 USDT per WAVE = 500 USDT)
+        payAmountBigInt = (waveAmount * currentStage.priceUsdtUnitsPerWave) / parseUnits('1', 18)
+        setPayAmount(formatTokenAmountForInput(payAmountBigInt, usdtDecimals, 4))
       }
     } catch (err) {
       console.error('Error calculating pay amount:', err)

@@ -26,6 +26,19 @@ export const formatUSDT = (value, decimals = 18, displayDecimals = 2) => {
   return formatTokenAmount(value, decimals, displayDecimals)
 }
 
+// Format bigint values for input fields (no commas)
+export const formatTokenAmountForInput = (value, decimals = 18, displayDecimals = 4) => {
+  if (!value) return '0'
+  
+  const formatted = formatUnits(value, decimals)
+  const num = parseFloat(formatted)
+  
+  if (num === 0) return '0'
+  if (num < 0.0001) return '0.0001'
+  
+  return num.toFixed(displayDecimals).replace(/\.?0+$/, '')
+}
+
 // Format percentage
 export const formatPercentage = (value, total, decimals = 2) => {
   if (!total || total === 0n) return '0'
