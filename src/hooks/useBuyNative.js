@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useWriteContract, useWaitForTransactionReceipt, useAccount } from 'wagmi'
 import { PRESALE_CONTRACT_ADDRESS } from '../lib/contract.js'
 import { getErrorMessage } from '../lib/errors.js'
@@ -12,8 +12,8 @@ export const useBuyNative = () => {
   const [error, setError] = useState(null)
   const [txHash, setTxHash] = useState(null)
   
-  const { writeContract } = useWriteContract()
-  const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
+  const { writeContractAsync } = useWriteContract()
+  const { isLoading: isConfirming, isSuccess, data: receipt } = useWaitForTransactionReceipt({
     hash: txHash,
   })
 
@@ -36,7 +36,7 @@ export const useBuyNative = () => {
         ? referrer 
         : '0x0000000000000000000000000000000000000000'
 
-      const hash = await writeContract({
+      const hash = await writeContractAsync({
         address: PRESALE_CONTRACT_ADDRESS,
         abi: PresaleStagesABI,
         functionName: 'buyWithNative',
@@ -44,17 +44,27 @@ export const useBuyNative = () => {
         value: amount,
       })
 
+      // console.log("hash------>", hash);
+
+      // if (!hash) {
+      //   throw new Error('Transaction failed: No transaction hash received')
+      // }
+
       setTxHash(hash)
 
-      // Log transaction (don't await to avoid blocking)
-      logTransaction({
-        type: 'buy_native',
-        hash,
-        address: address,
-        amount: amount.toString(),
-        token: 'BNB',
-        referrer: ref !== '0x0000000000000000000000000000000000000000' ? ref : null,
-      }).catch(console.error)
+      // // Log initial transaction (don't await to avoid blocking)
+      // logTransaction({
+      //   type: 'buy_native',
+      //   hash,
+      //   address: address,
+      //   amount: amount.toString(),
+      //   token: 'BNB',
+      //   referrer: ref !== '0x0000000000000000000000000000000000000000' ? ref : null,
+      //   blockNumber: null,
+      //   gasUsed: null,
+      //   gasPrice: null,
+      //   status: 'pending'
+      // }).catch(console.error)
 
       return {
         hash,
@@ -69,6 +79,24 @@ export const useBuyNative = () => {
       setIsLoading(false)
     }
   }
+
+  // Update transaction log when receipt is available
+  useEffect(() => {
+    if (receipt && txHash) {
+      logTransaction({
+        type: 'buy_native',
+        hash: txHash,
+        address: address,
+        amount: null, // Amount already logged in initial transaction
+        token: 'BNB',
+        referrer: null, // Referrer already logged in initial transaction
+        blockNumber: Number(receipt.blockNumber),
+        gasUsed: receipt.gasUsed?.toString(),
+        gasPrice: receipt.effectiveGasPrice?.toString(),
+        status: receipt.status === 'success' ? 'confirmed' : 'failed'
+      }).catch(console.error)
+    }
+  }, [receipt, txHash, address])
 
   const reset = () => {
     setIsLoading(false)

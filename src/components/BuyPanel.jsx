@@ -19,7 +19,7 @@ export const BuyPanel = ({
   onTermsChange 
 }) => {
   const { address, isConnected } = useAccount()
-  const { success, error: showError, loading: showLoading } = useToast()
+  const { success, error: showError, loading: showLoading, dismiss } = useToast()
   
   const [activeTab, setActiveTab] = useState('bnb')
   const [payAmount, setPayAmount] = useState('')
@@ -161,7 +161,6 @@ export const BuyPanel = ({
   // Check if USDT needs approval
   const needsApproval = () => {
     if (activeTab !== 'usdt' || !payAmount) return false
-    
     try {
       const payAmountBigInt = parseTokenInput(payAmount, usdtDecimals)
       return payAmountBigInt > usdtAllowance
@@ -194,18 +193,18 @@ export const BuyPanel = ({
       if (activeTab === 'bnb') {
         const loadingToastId = showLoading('Confirming BNB purchase...')
         const result = await buyWithNative(payAmountBigInt, referrer)
-        showError('', { id: loadingToastId }) // Remove loading toast
+        dismiss(loadingToastId)
         success('Purchase submitted successfully!', { txUrl: result.txUrl })
       } else {
         if (needsApproval()) {
           const loadingToastId = showLoading('Approving USDT spending...')
           await approveUSDT(payAmountBigInt)
-          showError('', { id: loadingToastId })
+          dismiss(loadingToastId)
           success('USDT approved! You can now purchase tokens.')
         } else {
           const loadingToastId = showLoading('Confirming USDT purchase...')
           const result = await buyWithUSDT(payAmountBigInt, referrer)
-          showError('', { id: loadingToastId })
+          dismiss(loadingToastId)
           success('Purchase submitted successfully!', { txUrl: result.txUrl })
         }
       }

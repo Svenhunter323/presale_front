@@ -10,7 +10,7 @@ export const RefundPanel = ({
   usdtDecimals,
   isValidChain 
 }) => {
-  const { success, error: showError, loading: showLoading } = useToast()
+  const { success, error: showError, loading: showLoading, dismiss } = useToast()
   
   const {
     refund,
@@ -33,7 +33,7 @@ export const RefundPanel = ({
     try {
       const loadingToastId = showLoading('Processing refund...')
       const result = await refund()
-      showError('', { id: loadingToastId }) // Remove loading toast
+      dismiss(loadingToastId)
       success('Refund processed successfully!', { txUrl: result.txUrl })
     } catch (err) {
       showError(err.message || 'Failed to process refund')

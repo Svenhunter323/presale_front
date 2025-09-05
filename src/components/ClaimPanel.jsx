@@ -12,7 +12,7 @@ export const ClaimPanel = ({
   isValidChain 
 }) => {
   const { timeRemaining, isExpired: canClaim } = useCountdown(unlockTs)
-  const { success, error: showError, loading: showLoading } = useToast()
+  const { success, error: showError, loading: showLoading, dismiss } = useToast()
   
   const {
     claim,
@@ -34,7 +34,7 @@ export const ClaimPanel = ({
     try {
       const loadingToastId = showLoading('Claiming tokens...')
       const result = await claim()
-      showError('', { id: loadingToastId }) // Remove loading toast
+      dismiss(loadingToastId)
       success('Tokens claimed successfully!', { txUrl: result.txUrl })
     } catch (err) {
       showError(err.message || 'Failed to claim tokens')

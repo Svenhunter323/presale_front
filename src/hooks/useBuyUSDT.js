@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useWriteContract, useWaitForTransactionReceipt, useAccount } from 'wagmi'
 import { PRESALE_CONTRACT_ADDRESS, USDT_CONTRACT_ADDRESS, ERC20_ABI } from '../lib/contract.js'
 import { getErrorMessage } from '../lib/errors.js'
@@ -13,8 +13,8 @@ export const useBuyUSDT = () => {
   const [txHash, setTxHash] = useState(null)
   const [step, setStep] = useState('idle') // 'idle', 'approving', 'buying'
   
-  const { writeContract } = useWriteContract()
-  const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
+  const { writeContractAsync } = useWriteContract()
+  const { isLoading: isConfirming, isSuccess, data: receipt } = useWaitForTransactionReceipt({
     hash: txHash,
   })
 
@@ -33,7 +33,7 @@ export const useBuyUSDT = () => {
       setStep('approving')
       setTxHash(null)
 
-      const hash = await writeContract({
+      const hash = await writeContractAsync({
         address: USDT_CONTRACT_ADDRESS,
         abi: ERC20_ABI,
         functionName: 'approve',
@@ -77,16 +77,20 @@ export const useBuyUSDT = () => {
         ? referrer 
         : '0x0000000000000000000000000000000000000000'
 
-      const hash = await writeContract({
+      const hash = await writeContractAsync({
         address: PRESALE_CONTRACT_ADDRESS,
         abi: PresaleStagesABI,
-        functionName: 'buyWithUSDT',
+        functionName: 'buyWithUsdt',
         args: [amount, ref],
       })
 
+      if (!hash) {
+        throw new Error('Transaction failed: No transaction hash received')
+      }
+
       setTxHash(hash)
 
-      // Log transaction (don't await to avoid blocking)
+      // Log initial transaction (don't await to avoid blocking)
       logTransaction({
         type: 'buy_usdt',
         hash,
@@ -94,6 +98,10 @@ export const useBuyUSDT = () => {
         amount: amount.toString(),
         token: 'USDT',
         referrer: ref !== '0x0000000000000000000000000000000000000000' ? ref : null,
+        blockNumber: null,
+        gasUsed: null,
+        gasPrice: null,
+        status: 'pending'
       }).catch(console.error)
 
       return {
@@ -110,6 +118,24 @@ export const useBuyUSDT = () => {
       setIsLoading(false)
     }
   }
+
+  // Update transaction log when receipt is available
+  useEffect(() => {
+    if (receipt && txHash && step === 'buying') {
+      logTransaction({
+        type: 'buy_usdt',
+        hash: txHash,
+        address: address,
+        amount: null, // Amount already logged in initial transaction
+        token: 'USDT',
+        referrer: null, // Referrer already logged in initial transaction
+        blockNumber: Number(receipt.blockNumber),
+        gasUsed: receipt.gasUsed?.toString(),
+        gasPrice: receipt.effectiveGasPrice?.toString(),
+        status: receipt.status === 'success' ? 'confirmed' : 'failed'
+      }).catch(console.error)
+    }
+  }, [receipt, txHash, address, step])
 
   const reset = () => {
     setIsLoading(false)
