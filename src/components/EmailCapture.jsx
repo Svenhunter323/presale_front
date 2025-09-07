@@ -4,6 +4,7 @@ import { useReferral } from '../hooks/useReferral.js'
 import { subscribeEmail } from '../lib/api.js'
 import { useToast } from './Toasts.jsx'
 import { clsx } from 'clsx'
+import { CheckCircle } from 'lucide-react'
 
 export const EmailCapture = () => {
   const { address } = useAccount()
@@ -58,7 +59,7 @@ export const EmailCapture = () => {
     return (
       <div className="bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700 rounded-lg p-6 shadow-lg">
         <div className="text-center">
-          <div className="text-4xl mb-4">✅</div>
+          <div className="text-4xl mb-4"><CheckCircle className="w-16 h-16 text-green-500 mx-auto" /></div>
           <h3 className="text-xl font-bold text-white mb-2">Successfully Subscribed!</h3>
           <p className="text-gray-300">
             Thank you for subscribing. You'll receive important updates about the presale and token launch.
@@ -138,7 +139,7 @@ export const EmailCapture = () => {
       {/* Benefits */}
       <div className="mt-4 bg-primary-900/20 border border-primary-700/30 rounded-lg p-3">
         <div className="text-sm text-primary-200">
-          <div className="font-medium mb-2">📧 What you'll receive:</div>
+          <div className="font-medium mb-2"> What you'll receive:</div>
           <ul className="space-y-1 text-xs">
             <li>• Presale status updates and milestones</li>
             <li>• Token launch and listing announcements</li>

@@ -2,6 +2,7 @@ import { formatTokenAmount, formatBNB, formatUSDT } from '../lib/format.js'
 import { useRefund } from '../hooks/useRefund.js'
 import { useToast } from './Toasts.jsx'
 import { clsx } from 'clsx'
+import { DollarSign, Info } from 'lucide-react'
 
 export const RefundPanel = ({ 
   userData, 
@@ -49,7 +50,7 @@ export const RefundPanel = ({
       {/* Refund Status */}
       <div className="bg-red-900 border border-red-700 rounded-lg p-4 mb-6">
         <div className="flex items-center space-x-3">
-          <span className="text-2xl">💰</span>
+          <DollarSign className="w-6 h-6 text-red-400" />
           <div>
             <h4 className="font-medium text-red-100">Soft Cap Not Met</h4>
             <p className="text-sm text-red-200">
@@ -114,7 +115,7 @@ export const RefundPanel = ({
       ) : (
         <div className="bg-gray-800 border border-gray-600 rounded-lg p-4 mb-6">
           <div className="flex items-center space-x-3">
-            <span className="text-2xl">ℹ️</span>
+            <Info className="w-6 h-6 text-gray-400" />
             <div>
               <h4 className="font-medium text-gray-100">No Refund Available</h4>
               <p className="text-sm text-gray-300">

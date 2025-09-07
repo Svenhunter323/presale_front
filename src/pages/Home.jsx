@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useAccount } from 'wagmi'
+import { AlertTriangle } from 'lucide-react'
 import { useSaleReads } from '../hooks/useSaleReads.js'
 import { useReferral } from '../hooks/useReferral.js'
 import { Header } from '../components/Header.jsx'
@@ -75,7 +76,7 @@ export const Home = () => {
         <Header />
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="text-center max-w-md">
-            <div className="text-4xl mb-4">⚠️</div>
+            <div className="text-4xl mb-4"><AlertTriangle className="w-16 h-16 text-yellow-500 mx-auto" /></div>
             <h2 className="text-xl font-bold mb-2">Failed to Load Data</h2>
             <p className="text-gray-300 mb-4">
               Unable to connect to the presale contract. Please check your network connection and try again.
@@ -101,7 +102,7 @@ export const Home = () => {
         {isConnected && !isValidChain && (
           <div className="mb-8 bg-red-900 border border-red-700 rounded-lg p-4">
             <div className="flex items-center space-x-3">
-              <span className="text-2xl">⚠️</span>
+              <AlertTriangle className="w-6 h-6 text-red-400" />
               <div>
                 <h3 className="font-bold text-red-100">Wrong Network</h3>
                 <p className="text-sm text-red-200">
@@ -257,7 +258,7 @@ export const Home = () => {
             {/* Important Notice */}
             <div className="bg-yellow-900/20 border border-yellow-700/30 rounded-lg p-4">
               <div className="flex items-start space-x-3">
-                <span className="text-xl">⚠️</span>
+                <AlertTriangle className="w-5 h-5 text-yellow-400" />
                 <div>
                   <h4 className="font-medium text-yellow-100 mb-2">Important Notice</h4>
                   <ul className="text-sm text-yellow-200 space-y-1">

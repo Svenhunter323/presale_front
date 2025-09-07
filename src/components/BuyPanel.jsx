@@ -6,6 +6,7 @@ import { useBuyNative } from '../hooks/useBuyNative.js'
 import { useBuyUSDT } from '../hooks/useBuyUSDT.js'
 import { useToast } from './Toasts.jsx'
 import { clsx } from 'clsx'
+import { AlertTriangle, X } from 'lucide-react'
 
 export const BuyPanel = ({ 
   currentStage, 
@@ -297,11 +298,11 @@ export const BuyPanel = ({
             const balanceCheck = checkBalance()
             
             if (!stageCheck.valid) {
-              return <div className="text-yellow-400 text-sm">⚠️ {stageCheck.message}</div>
+              return <div className="flex items-center space-x-1 text-yellow-400 text-sm"><AlertTriangle className="w-4 h-4" /><span>{stageCheck.message}</span></div>
             }
             
             if (!balanceCheck.valid) {
-              return <div className="text-red-400 text-sm">❌ {balanceCheck.message}</div>
+              return <div className="flex items-center space-x-1 text-red-400 text-sm"><X className="w-4 h-4" /><span>{balanceCheck.message}</span></div>
             }
             
             return null

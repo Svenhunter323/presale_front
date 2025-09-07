@@ -1,6 +1,7 @@
 import { useReferral } from '../hooks/useReferral.js'
 import { useToast } from './Toasts.jsx'
 import { clsx } from 'clsx'
+import { TrendingUp } from 'lucide-react'
 
 export const SocialShare = ({ className }) => {
   const { userReferralLink } = useReferral()
@@ -143,7 +144,7 @@ export const SocialShare = ({ className }) => {
       {/* Share Stats/Benefits */}
       <div className="mt-6 bg-primary-900/20 border border-primary-700/30 rounded-lg p-4">
         <div className="flex items-start space-x-3">
-          <span className="text-xl">📈</span>
+          <TrendingUp className="w-5 h-5 text-primary-400" />
           <div>
             <h4 className="font-medium text-primary-100 mb-2">Why Share?</h4>
             <ul className="text-sm text-primary-200 space-y-1">

@@ -1,6 +1,6 @@
-import { getStatusText } from '../lib/format.js'
 import { useCountdown } from '../hooks/useCountdown.js'
 import { clsx } from 'clsx'
+import { Clock, CheckCircle, Pause, HelpCircle, Circle } from 'lucide-react'
 
 export const StatusBar = ({ status, startTs, endTs, finalized }) => {
   const { timeRemaining: startCountdown, isExpired: hasStarted } = useCountdown(startTs)
@@ -13,35 +13,35 @@ export const StatusBar = ({ status, startTs, endTs, finalized }) => {
           text: 'Not Started',
           subtext: hasStarted ? 'Starting soon...' : `Starts in: ${startCountdown}`,
           color: 'yellow',
-          icon: '⏳'
+          icon: <Clock className="w-6 h-6" />
         }
       case 1: // Live
         return {
           text: 'Live',
           subtext: hasEnded ? 'Ending soon...' : `Ends in: ${endCountdown}`,
           color: 'green',
-          icon: '🟢'
+          icon: <Circle className="w-6 h-6 fill-current" />
         }
       case 2: // Ended
         return {
           text: 'Ended',
           subtext: finalized ? 'Finalized' : 'Awaiting finalization',
           color: finalized ? 'blue' : 'gray',
-          icon: finalized ? '✅' : '⏸️'
+          icon: finalized ? <CheckCircle className="w-6 h-6" /> : <Pause className="w-6 h-6" />
         }
       case 3: // Paused
         return {
           text: 'Paused',
           subtext: 'Sale temporarily paused',
           color: 'red',
-          icon: '⏸️'
+          icon: <Pause className="w-6 h-6" />
         }
       default:
         return {
           text: 'Unknown',
           subtext: 'Status unknown',
           color: 'gray',
-          icon: '❓'
+          icon: <HelpCircle className="w-6 h-6" />
         }
     }
   }
@@ -62,7 +62,7 @@ export const StatusBar = ({ status, startTs, endTs, finalized }) => {
       colorClasses[statusInfo.color]
     )}>
       <div className="flex items-center justify-center space-x-3 mb-2">
-        <span className="text-2xl">{statusInfo.icon}</span>
+        <div className="text-2xl">{statusInfo.icon}</div>
         <h2 className="text-2xl font-bold">{statusInfo.text}</h2>
       </div>
       

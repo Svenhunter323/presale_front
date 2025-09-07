@@ -3,6 +3,7 @@ import { useCountdown } from '../hooks/useCountdown.js'
 import { useClaim } from '../hooks/useClaim.js'
 import { useToast } from './Toasts.jsx'
 import { clsx } from 'clsx'
+import { Clock, Info, CheckCircle } from 'lucide-react'
 
 export const ClaimPanel = ({ 
   userData, 
@@ -52,7 +53,7 @@ export const ClaimPanel = ({
         {!canClaim ? (
           <div className="bg-yellow-900 border border-yellow-700 rounded-lg p-4">
             <div className="flex items-center space-x-3">
-              <span className="text-2xl">⏳</span>
+              <Clock className="w-6 h-6 text-yellow-400" />
               <div>
                 <h4 className="font-medium text-yellow-100">Claim Locked</h4>
                 <p className="text-sm text-yellow-200">
@@ -64,7 +65,7 @@ export const ClaimPanel = ({
         ) : !hasClaimableTokens ? (
           <div className="bg-gray-800 border border-gray-600 rounded-lg p-4">
             <div className="flex items-center space-x-3">
-              <span className="text-2xl">ℹ️</span>
+              <Info className="w-6 h-6 text-gray-400" />
               <div>
                 <h4 className="font-medium text-gray-100">No Tokens to Claim</h4>
                 <p className="text-sm text-gray-300">
@@ -76,7 +77,7 @@ export const ClaimPanel = ({
         ) : (
           <div className="bg-green-900 border border-green-700 rounded-lg p-4">
             <div className="flex items-center space-x-3">
-              <span className="text-2xl">✅</span>
+              <CheckCircle className="w-6 h-6 text-green-400" />
               <div>
                 <h4 className="font-medium text-green-100">Ready to Claim</h4>
                 <p className="text-sm text-green-200">
