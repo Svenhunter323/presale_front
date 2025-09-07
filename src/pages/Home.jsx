@@ -236,8 +236,8 @@ export const Home = () => {
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-400">USDT Contributed:</span>
                     <span className="text-white font-medium">
-                      {userData.paidUSDT ? 
-                        `${(Number(userData.paidUSDT) / Math.pow(10, usdtDecimals)).toFixed(2)} USDT` : 
+                      {userData.paidUsdt ? 
+                        `${(Number(userData.paidUsdt) / Math.pow(10, usdtDecimals)).toFixed(2)} USDT` : 
                         '0 USDT'
                       }
                     </span>
