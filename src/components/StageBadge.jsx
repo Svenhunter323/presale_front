@@ -1,5 +1,6 @@
 import { formatTokenAmount, formatBNB, formatUSDT } from '../lib/format.js'
 import { clsx } from 'clsx'
+import { ProgressBar } from './ProgressBar.jsx'
 
 export const StageBadge = ({ currentStage, usdtDecimals, className }) => {
   if (!currentStage) {
@@ -54,23 +55,24 @@ export const StageBadge = ({ currentStage, usdtDecimals, className }) => {
 
         {/* Stage Progress */}
         <div className="space-y-2">
-          <div className="flex justify-between text-xs text-gray-300">
+          <div className="flex justify-between text-xs text-gray-300 mb-1">
             <span>Stage Progress</span>
             <span>
               {formatTokenAmount(currentStage.soldInStage)} / {formatTokenAmount(currentStage.capWave)} WAVE
             </span>
           </div>
           
-          <div className="w-full bg-gray-800 rounded-full h-2">
-            <div 
-              className="bg-gradient-to-r from-green-400 to-green-300 h-2 rounded-full transition-all duration-300"
-              style={{ 
-                width: `${Math.min((Number(currentStage.soldInStage) / Number(currentStage.capWave)) * 100, 100)}%` 
-              }}
-            />
-          </div>
+          <ProgressBar 
+            soldWave={currentStage.soldInStage}
+            capWave={currentStage.capWave}
+            gradient="green"
+            showStats={false}
+            showCap={false}
+            height="h-6"
+            className=""
+          />
           
-          <div className="text-xs text-gray-300 text-center">
+          <div className="text-xs text-gray-300 text-center mt-2">
             {formatTokenAmount(currentStage.remainingInStage)} WAVE remaining in this stage
           </div>
         </div>

@@ -15,7 +15,7 @@ import {
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card.jsx'
 import { Button } from '../ui/Button.jsx'
 import { Badge } from '../ui/Badge.jsx'
-import { CircularProgress } from '../ui/ProgressBar.jsx'
+import { CircularProgress, ProgressBar } from '../ui/ProgressBar.jsx'
 import { Switch } from '../ui/Switch.jsx'
 import { createContractReads, createContractWrites } from '../../lib/contract.js'
 import { createTransactionHandler } from '../../lib/transactions.js'
@@ -292,12 +292,13 @@ export function OverviewSection({ isOwner }) {
               {softCapProgress.toFixed(1)}%
             </span>
           </div>
-          <div className="h-2 bg-white/10 rounded-full overflow-hidden">
-            <div 
-              className="h-full bg-gradient-to-r from-green-400 to-emerald-400 transition-all duration-500"
-              style={{ width: `${Math.min(softCapProgress, 100)}%` }}
-            />
-          </div>
+          <ProgressBar 
+            value={softCapProgress}
+            max={100}
+            showLabel={false}
+            gradient="green"
+            height="h-3"
+          />
           <div className="flex justify-between text-xs text-zinc-500 mt-1">
             <span>{formatUnits(data.raisedUsdtUnits, 18)} USDT</span>
             <span>{formatUnits(data.softCapUsdtUnits, 18)} USDT</span>

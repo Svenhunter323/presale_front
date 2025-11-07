@@ -1,5 +1,6 @@
 import { formatUSDT, formatPercentage } from '../lib/format.js'
 import { clsx } from 'clsx'
+import { ProgressBar } from './ProgressBar.jsx'
 
 export const SoftCapProgress = ({ 
   softCapUsdtUnits, 
@@ -48,11 +49,11 @@ export const SoftCapProgress = ({
 
   const statusInfo = getStatusInfo()
 
-  const colorClasses = {
-    green: 'from-green-600 to-green-500',
-    blue: 'from-blue-600 to-blue-500',
-    red: 'from-red-600 to-red-500',
-    gray: 'from-gray-600 to-gray-500',
+  const gradientColors = {
+    green: 'linear-gradient(90deg, #10b981, #34d399)',
+    blue: 'linear-gradient(90deg, #3b82f6, #60a5fa)',
+    red: 'linear-gradient(90deg, #ef4444, #f87171)',
+    gray: 'linear-gradient(90deg, #6b7280, #9ca3af)',
   }
 
   const bgColorClasses = {
@@ -86,44 +87,26 @@ export const SoftCapProgress = ({
         </div>
 
         {/* Progress Bar */}
-        <div className="space-y-2">
-          <div className="flex justify-between text-sm opacity-90">
-            <span>Progress</span>
-            <span>{percentage}%</span>
-          </div>
-          
-          <div className="relative">
-            <div className="w-full bg-gray-800 rounded-full h-4 border border-gray-700">
-              <div 
-                className={clsx(
-                  'h-full rounded-full transition-all duration-500 ease-out relative overflow-hidden bg-gradient-to-r',
-                  colorClasses[statusInfo.color]
-                )}
-                style={{ width: `${Math.min(percentage, 100)}%` }}
-              >
-                {/* Animated shine effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse-slow"></div>
-              </div>
-            </div>
-            
-            {/* Percentage label */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-xs font-bold text-white drop-shadow-lg">
-                {percentage}%
-              </span>
-            </div>
-          </div>
-        </div>
+        <ProgressBar 
+          value={percentage}
+          max={100}
+          gradient={gradientColors[statusInfo.color]}
+          showStats={false}
+          showCap={false}
+          showLabel={true}
+          height="h-6"
+          className=""
+        />
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-2 gap-4 text-sm">
+        <div className="grid grid-cols-2 gap-4 text-sm mt-4">
           <div className="text-center">
             <div className="opacity-75 mb-1">Raised</div>
-            <div className="font-bold">{raisedFormatted} USDT</div>
+            <div className="font-bold text-lg">{raisedFormatted} USDT</div>
           </div>
           <div className="text-center">
             <div className="opacity-75 mb-1">Target</div>
-            <div className="font-bold">{softCapFormatted} USDT</div>
+            <div className="font-bold text-lg">{softCapFormatted} USDT</div>
           </div>
         </div>
 

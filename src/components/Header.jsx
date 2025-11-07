@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { useAccount, useChainId, useSwitchChain } from 'wagmi'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 import { TARGET_CHAIN, isTargetChain, getChainName, getAddressUrl } from '../lib/chains.js'
@@ -11,6 +12,16 @@ export const Header = () => {
   const chainId = useChainId()
   const { switchChain } = useSwitchChain()
   const { open } = useWeb3Modal()
+  const [scrolled, setScrolled] = useState(false)
+
+  // Handle scroll for transparency effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20)
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   const handleConnect = () => {
     open()
@@ -31,7 +42,14 @@ export const Header = () => {
   const isWrongChain = isConnected && !isTargetChain(chainId)
 
   return (
-    <header className="bg-gray-900 border-b border-gray-800">
+    <header 
+      className={clsx(
+        "fixed top-0 left-0 right-0 z-50 border-b transition-all duration-300",
+        scrolled 
+          ? "bg-gray-900/70 backdrop-blur-lg border-gray-800/50 shadow-lg" 
+          : "bg-gray-900/30 backdrop-blur-sm border-gray-800/30"
+      )}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo/Title */}
@@ -42,7 +60,7 @@ export const Header = () => {
               className="w-8 h-8 mr-3 rounded-full object-cover"
             />
             <h1 className="text-xl font-bold text-white flex items-center">
-              WAVE Presale
+              $WAVE Presale
             </h1>
           </div>
 

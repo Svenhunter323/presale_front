@@ -222,7 +222,7 @@ export const BuyPanel = ({
   const isDisabled = !isConnected || !isValidChain || status !== 1 || !currentStage || !payAmount || !receiveAmount
 
   return (
-    <div className="bg-gray-900 border border-gray-700 rounded-lg p-6">
+    <div className="card">
       <h3 className="text-xl font-bold text-white mb-6">Buy Tokens</h3>
       
       {/* Tab Selector */}
@@ -333,12 +333,12 @@ export const BuyPanel = ({
         onClick={handleBuy}
         disabled={isDisabled || isBuyingNative || isBuyingUSDT}
         className={clsx(
-          'w-full py-3 px-4 rounded-lg font-medium transition-colors',
+          'w-full py-3 px-4 rounded-lg font-medium transition-all duration-300 relative overflow-hidden',
           isDisabled || isBuyingNative || isBuyingUSDT
             ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
             : needsApproval() && activeTab === 'usdt'
-            ? 'bg-yellow-600 hover:bg-yellow-700 text-white'
-            : 'bg-primary-600 hover:bg-primary-700 text-white'
+            ? 'bg-yellow-600 hover:bg-yellow-700 text-white hover:shadow-lg hover:shadow-yellow-500/50 hover:-translate-y-0.5'
+            : 'bg-primary-600 hover:bg-primary-700 text-white hover:shadow-lg hover:shadow-primary-500/50 hover:-translate-y-0.5'
         )}
       >
         {isBuyingNative || isBuyingUSDT ? (

@@ -1,6 +1,6 @@
 // src/components/admin/WithdrawalsSection.jsx
 import { useState, useEffect } from 'react'
-import { usePublicClient, useAccount } from 'wagmi'
+import { usePublicClient, useWalletClient, useAccount } from 'wagmi'
 import { formatUnits, parseUnits, formatEther } from 'viem'
 import { 
   Coins, 
@@ -32,6 +32,7 @@ export function WithdrawalsSection({ isOwner }) {
   })
   
   const publicClient = usePublicClient()
+  const { data: walletClient } = useWalletClient()
   const { address } = useAccount()
   const { handleTransaction } = createTransactionHandler()
 
@@ -87,7 +88,7 @@ export function WithdrawalsSection({ isOwner }) {
 
     try {
       setActionLoading(true)
-      const contract = createContractIO(publicClient, { account: address })
+      const contract = createContractIO(publicClient, walletClient)
       
       await handleTransaction(
         contract.adminWithdrawNative(amountWei, address),
@@ -126,7 +127,7 @@ export function WithdrawalsSection({ isOwner }) {
 
     try {
       setActionLoading(true)
-      const contract = createContractIO(publicClient, { account: address })
+      const contract = createContractIO(publicClient, walletClient)
       
       await handleTransaction(
         contract.adminWithdrawToken(withdrawForm.tokenAddress, amountUnits, address),
@@ -156,7 +157,7 @@ export function WithdrawalsSection({ isOwner }) {
 
     try {
       setActionLoading(true)
-      const contract = createContractIO(publicClient, { account: address })
+      const contract = createContractIO(publicClient, walletClient)
       
       await handleTransaction(
         contract.adminSweepAllWave(address),

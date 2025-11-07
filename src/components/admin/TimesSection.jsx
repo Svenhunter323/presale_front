@@ -1,6 +1,6 @@
 // src/components/admin/TimesSection.jsx
 import { useState, useEffect } from 'react'
-import { usePublicClient, useAccount } from 'wagmi'
+import { usePublicClient, useWalletClient, useAccount } from 'wagmi'
 import { Clock, Calendar, Copy, Check } from 'lucide-react'
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card.jsx'
 import { Button } from '../ui/Button.jsx'
@@ -21,6 +21,7 @@ export function TimesSection({ isOwner }) {
   })
   
   const publicClient = usePublicClient()
+  const { data: walletClient } = useWalletClient()
   const { address } = useAccount()
   const { handleTransaction } = createTransactionHandler()
 
@@ -127,7 +128,12 @@ export function TimesSection({ isOwner }) {
 
     try {
       setActionLoading(true)
-      const contract = createContractIO(publicClient, { account: address })
+      
+      if (!walletClient) {
+        throw new Error('Wallet not connected')
+      }
+      
+      const contract = createContractIO(publicClient, walletClient)
       
       await handleTransaction(
         contract.adminSetTimes(start, end, unlock, address),

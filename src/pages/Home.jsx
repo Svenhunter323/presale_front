@@ -4,6 +4,9 @@ import { AlertTriangle } from 'lucide-react'
 import { useSaleReads } from '../hooks/useSaleReads.js'
 import { useReferral } from '../hooks/useReferral.js'
 import { Header } from '../components/Header.jsx'
+import { Hero } from '../components/Hero.jsx'
+import { BackToTop } from '../components/BackToTop.jsx'
+import { Footer } from '../components/Footer.jsx'
 import { StatusBar } from '../components/StatusBar.jsx'
 import { ProgressBar } from '../components/ProgressBar.jsx'
 import { StageBadge } from '../components/StageBadge.jsx'
@@ -94,8 +97,14 @@ export const Home = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white">
+    <div className="min-h-screen text-white">
       <Header />
+      <BackToTop />
+      
+      {/* Add padding-top to account for fixed header */}
+      <div className="pt-16">
+        <Hero />
+      </div>
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Chain Guard */}
@@ -273,14 +282,10 @@ export const Home = () => {
           </div>
         </div>
 
-        {/* Footer */}
-        <footer className="mt-16 pt-8 border-t border-gray-800 text-center text-sm text-gray-400">
-          <p>
-            © 2024 Token Presale. All rights reserved. 
-            Built on BNB Smart Chain.
-          </p>
-        </footer>
       </main>
+      
+      {/* Professional Footer */}
+      <Footer />
     </div>
   )
 }

@@ -19,13 +19,20 @@ export function ProgressBar({
           <span className="text-white font-medium">{percentage.toFixed(1)}%</span>
         </div>
       )}
-      <div className="h-3 bg-white/10 rounded-full overflow-hidden">
+      <div className="h-3 bg-white/10 rounded-full overflow-hidden backdrop-blur-sm border border-white/5">
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${percentage}%` }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="h-full bg-gradient-to-r from-teal-400 via-cyan-400 to-indigo-400 rounded-full"
-        />
+          transition={{ duration: 1.2, ease: "easeOut" }}
+          className="h-full bg-gradient-to-r from-teal-400 via-cyan-400 to-indigo-400 rounded-full relative overflow-hidden"
+        >
+          {/* Animated shine effect */}
+          <motion.div 
+            animate={{ x: ['-100%', '200%'] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+          />
+        </motion.div>
       </div>
     </div>
   )

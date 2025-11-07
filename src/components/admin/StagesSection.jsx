@@ -1,6 +1,6 @@
 // src/components/admin/StagesSection.jsx
 import { useState, useEffect } from 'react'
-import { usePublicClient, useAccount } from 'wagmi'
+import { usePublicClient, useWalletClient, useAccount } from 'wagmi'
 import { formatUnits, parseUnits } from 'viem'
 import { 
   Layers, 
@@ -28,6 +28,7 @@ export function StagesSection({ isOwner }) {
   const [showImport, setShowImport] = useState(false)
   
   const publicClient = usePublicClient()
+  const { data: walletClient } = useWalletClient()
   const { address } = useAccount()
   const { handleTransaction } = createTransactionHandler()
 
@@ -179,7 +180,7 @@ export function StagesSection({ isOwner }) {
 
     try {
       setActionLoading(true)
-      const contract = createContractIO(publicClient, { account: address })
+      const contract = createContractIO(publicClient, walletClient)
       
       const caps = editStages.map(s => parseUnits(s.capWave, 18))
       const priceNative = editStages.map(s => parseUnits(s.priceNative, 18))

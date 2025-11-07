@@ -24,7 +24,7 @@ function App() {
         <AdminAuthProvider>
           <BrowserRouter>
             <ToastProvider>
-              <div className="min-h-screen bg-[#0B0E13] text-zinc-200">
+              <div className="min-h-screen text-zinc-200">
                 <AppRoutes />
               </div>
             </ToastProvider>
